@@ -8,9 +8,9 @@ import { User, UserDocument } from "./user.schema";
 
 @Injectable()
 export class UsersRepository {
-    constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+    constructor(@InjectModel(User.name) public userModel: Model<UserDocument>) {}
 
-    async createUser(authCredentialsDto: AuthCredentialsDto): Promise<void> {
+    async createUser(authCredentialsDto: AuthCredentialsDto){
        
         const salt = await bcrypt.genSalt();
         const hashedPassword = await bcrypt.hash(authCredentialsDto.password, salt);
@@ -29,19 +29,5 @@ export class UsersRepository {
         }
   
     }
-
-      async loginUser(authCredentialsDto: AuthCredentialsDto): Promise<any> {
-        const { username, password } = authCredentialsDto;
-        const query = this.userModel.findOne({ username });
-        
-        if (query && (await bcrypt.compare(password, (await query).password ))) {
-          console.log('Success');
-          // return 'Success';
-        } else {
-          throw new UnauthorizedException('Please check your login credentials');
-        }
-
-      }
-
 
 }
