@@ -26,10 +26,14 @@
     "@nestjs/core": "^8.0.0",
     "@nestjs/mongoose": "^8.0.1",
     "@nestjs/platform-express": "^8.0.0",
+    "bcrypt": "^5.0.1",
+    "class-transformer": "^0.4.0",
+    "class-validator": "^0.13.1",
     "mongoose": "^5.13.9",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
-    "rxjs": "^7.2.0"
+    "rxjs": "^7.2.0",
+    "uuidv4": "^6.2.12"
   },
   "devDependencies": {
     "@nestjs/cli": "^8.0.0",
