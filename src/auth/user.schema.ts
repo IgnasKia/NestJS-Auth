@@ -8,6 +8,11 @@ export class User {
   @Prop()
   id: string;
 
+  @Prop({
+    default: false
+  })
+    admin: boolean;
+
   @Prop({ 
     type: String,
     required: true,

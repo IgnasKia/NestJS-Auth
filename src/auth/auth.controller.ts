@@ -2,6 +2,7 @@ import { Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common
 import { AuthCredentialsDto } from "./dto/auth-credentials.dto";
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
+import { AdminGuard } from './admin.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -16,10 +17,11 @@ export class AuthController {
     async signIn(@Body() authCredentialsDto: AuthCredentialsDto): Promise<{accessToken: string}> {
          return await this.authService.signIn(authCredentialsDto);
     }
-    @UseGuards(AuthGuard())
-    @Get('profile')
+    
+    @UseGuards(AuthGuard(), AdminGuard)
+    @Get('admin')
     getProfile() {
-        return "Logged in";
+        return "Logged in as admin";
     }
     
 }
