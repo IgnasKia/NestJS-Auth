@@ -7,12 +7,13 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt'
 import { JwtStrategy } from './dto/jwt.strategy';
-
+import * as dotEnv from 'dotenv';
+dotEnv.config();
 @Module({
   imports: [
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
-      secret: 'topSecret',
+      secret: process.env.SECRET_KEY,
       signOptions: {
         expiresIn: 3600,
       },
