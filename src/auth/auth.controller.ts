@@ -19,9 +19,9 @@ export class AuthController {
     }
     
     @UseGuards(AuthGuard(), AdminGuard)
-    @Get('admin')
-    getProfile() {
-        return "Logged in as admin";
+    @Get('/admin')
+    async getUsers() {
+        return await this.authService.getAllUsers();
     }
     
 }

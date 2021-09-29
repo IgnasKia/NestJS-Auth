@@ -30,4 +30,9 @@ export class UsersRepository {
   
     }
 
+    async getUsers(){
+      const users = this.userModel.find();
+      return users;
+    }
+
 }
