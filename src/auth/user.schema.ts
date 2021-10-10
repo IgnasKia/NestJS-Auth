@@ -9,6 +9,11 @@ export class User {
   id: string;
 
   @Prop({
+    default: 0
+  })
+    balance: number;
+
+  @Prop({
     default: false
   })
     admin: boolean;
