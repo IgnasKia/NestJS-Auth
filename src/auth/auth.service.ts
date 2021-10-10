@@ -10,7 +10,7 @@ import { JwtPayload } from './dto/jwt-payload.interface';
 @Injectable()
 export class AuthService {
     User: any;
-    constructor(private readonly usersRepository: UsersRepository, private jwtService: JwtService,) {}
+    constructor(private readonly usersRepository: UsersRepository, private jwtService: JwtService) {}
 
     async signUp(authCredentialsDto: AuthCredentialsDto){
       await this.usersRepository.createUser(authCredentialsDto);
@@ -21,7 +21,7 @@ export class AuthService {
 
       const query = await this.usersRepository.userModel.findOne({ username });
       if (query && (await bcrypt.compare(password, (await query).password ))) {
-        const payload: JwtPayload = { username };
+        const payload: JwtPayload = { username, _id: query._id };
         const accessToken: string = await this.jwtService.sign(payload);
         return {accessToken};
         console.log('Success');
@@ -34,6 +34,10 @@ export class AuthService {
 
     async getAllUsers(){
       return this.usersRepository.getUsers();
+    }
+
+    async getUser(id) {
+      return this.usersRepository.getUser(id);
     }
 
 }
