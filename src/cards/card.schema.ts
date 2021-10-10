@@ -9,7 +9,9 @@ export class Card {
   @Prop()
   id: string;
 
-  @Prop()
+  @Prop({
+    default: " "
+  })
   userid: string;
 
   @Prop({ 
