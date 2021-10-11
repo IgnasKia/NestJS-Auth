@@ -21,13 +21,10 @@ export class AuthService {
 
       const query = await this.usersRepository.userModel.findOne({ username });
       if (query && (await bcrypt.compare(password, (await query).password ))) {
-        const payload: JwtPayload = { username, _id: query._id };
+        const payload: JwtPayload = { username, _id: query._id, admin: query.admin};
         const accessToken: string = await this.jwtService.sign(payload);
         return {accessToken};
-        console.log('Success');
-        // res.status(200).json({success: true});
       } else {
-        // res.status(401).json({success: false});
         throw new UnauthorizedException('Please check your login credentials');
       }
     }
@@ -39,5 +36,12 @@ export class AuthService {
     async getUser(id) {
       return this.usersRepository.getUser(id);
     }
+    
+    async updateUser(id, authCredentialsDto: AuthCredentialsDto) {
+      return this.usersRepository.updateUser(id, authCredentialsDto);
+    }
 
+    async removeUser(id) {
+      return this.usersRepository.removeUser(id);
+    }
 }

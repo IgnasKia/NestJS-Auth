@@ -5,8 +5,31 @@ export type UserDocument = User & Document;
 
 @Schema()
 export class User {
+
   @Prop()
   id: string;
+
+  @Prop({
+    default: 0
+  })
+    cardQuantity: number;
+
+  @Prop({ 
+    type: String,
+    required: true,
+    minlength: 4,
+    maxlength: 30
+  })
+    fullName: string;
+
+  @Prop({ 
+    type: String,
+    required: true,
+    minlength: 4,
+    maxlength: 30,
+    unique: true
+  })
+    email: string;
 
   @Prop({
     default: 0

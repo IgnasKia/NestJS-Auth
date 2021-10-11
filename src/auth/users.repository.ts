@@ -23,14 +23,16 @@ export class UsersRepository {
            await newUser.save();
         } catch (error) {
           // Duplicate error
+          console.log(error);
           if (error.name === 'MongoError' && error.code === 11000) {
             throw new ConflictException('Username already exists');
-          } else {
+          } 
+          else {
             throw new InternalServerErrorException(error);
           }
         }
-  
     }
+    
 
     async getUsers(){
       const users = this.userModel.find();
@@ -40,6 +42,27 @@ export class UsersRepository {
     async getUser(id){
       const user = this.userModel.findById(id);
       return user;
+    }
+
+    async removeUser(id){
+      return this.userModel.findByIdAndDelete(id);
+    }
+
+    async updateUser(id, authCredentialsDto: AuthCredentialsDto){
+      const updatedUser = this.userModel.findByIdAndUpdate(id, authCredentialsDto);
+
+      try {
+       (await updatedUser).save();
+     } catch (error) {
+       // Duplicate error
+       console.log(error);
+       if (error.name === 'MongoError' && error.code === 11000) {
+         throw new ConflictException('Username already exists');
+       } 
+       else {
+         throw new InternalServerErrorException(error);
+       }
+     }
     }
 
 }
