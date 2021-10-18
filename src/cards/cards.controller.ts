@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { Card } from './card.schema';
 import { CardsService } from './cards.service';
 import { CardDto } from './dto/card.dto';
@@ -9,7 +9,7 @@ import { AdminGuard } from '../auth/admin.guard';
 export class CardsController {
     constructor(private readonly cardsService: CardsService) {}
 
-    @Post()
+    @Post('/create')
     async create(@Body() cardDto: CardDto) {
         await this.cardsService.create(cardDto);
     }

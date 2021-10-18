@@ -32,7 +32,7 @@ export class Card {
     type: Number,
     required: true,
     minlength: 1,
-    maxlength: 5,
+    maxlength: 5
   })
   price: number;
 

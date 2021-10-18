@@ -7,6 +7,7 @@ import * as bcrypt from "bcrypt";
 import { JwtPayload } from './dto/jwt-payload.interface';
 
 
+
 @Injectable()
 export class AuthService {
     User: any;
@@ -18,9 +19,9 @@ export class AuthService {
     
     async signIn(authCredentialsDto: AuthCredentialsDto): Promise<{accessToken: string}> {
       const { username, password } = authCredentialsDto;
-
       const query = await this.usersRepository.userModel.findOne({ username });
       if (query && (await bcrypt.compare(password, (await query).password ))) {
+
         const payload: JwtPayload = { username, _id: query._id, admin: query.admin};
         const accessToken: string = await this.jwtService.sign(payload);
         return {accessToken};

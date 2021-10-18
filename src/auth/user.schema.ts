@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import moment from 'moment';
 import { Document } from 'mongoose';
 
 export type UserDocument = User & Document;
@@ -63,6 +64,14 @@ export class User {
     },
   })
   password: string;
+
+  @Prop({
+
+    default: moment().subtract(1, 'days').format()
+  // default: new Date(new Date().setDate(new Date().getDate() - 1))
+  })
+    lastReward: string;
+
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

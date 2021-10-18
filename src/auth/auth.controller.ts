@@ -4,6 +4,7 @@ import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { AdminGuard } from './admin.guard';
 
+
 @Controller('auth')
 export class AuthController {
     constructor(private authService: AuthService) {}
@@ -31,7 +32,7 @@ export class AuthController {
         return await this.authService.getUser(id);
     }
     
-    @UseGuards(AuthGuard(), AdminGuard)
+    @UseGuards(AuthGuard())
     @Patch('/user/:id')
     async updateUser(@Param('id') id: string, @Body() authCredentialsDto: AuthCredentialsDto) {
         return await this.authService.updateUser(id, authCredentialsDto);
@@ -42,4 +43,5 @@ export class AuthController {
     async removeUser(@Param('id') id: string) {
         return await this.authService.removeUser(id);
     }
+
 }
