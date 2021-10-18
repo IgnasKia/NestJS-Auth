@@ -1,21 +1,31 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { Card } from './card.schema';
 import { CardsService } from './cards.service';
 import { CardDto } from './dto/card.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { AdminGuard } from '../auth/admin.guard';
 
-@Controller('cards')
+@Controller()
 export class CardsController {
     constructor(private readonly cardsService: CardsService) {}
 
-    @Post('/create')
-    async create(@Body() cardDto: CardDto) {
+    @Post('cards/create')
+    async createCard(@Body() cardDto: CardDto) {
         await this.cardsService.create(cardDto);
     }
 
-    @Get()
+    @Get('cards')
     async findAll(): Promise<Card[]> {
         return this.cardsService.findAll();
+    }
+
+    @Patch('cards/update/:id')
+    async updateCardOwners(@Param('id') id: string, @Body() cardDto: CardDto) {
+        await this.cardsService.updateCard(id, cardDto);
+    }
+
+    @Get('user/:id/cards')
+    async findUserCards(@Param('id') id): Promise<Card[]> {
+        return await this.cardsService.getUserCards(id);
     }
 }

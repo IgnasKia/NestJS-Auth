@@ -1,6 +1,6 @@
 export class CardDto {
     id: string;
-    userid: string;
+    userid: [];
     name: string;
     price: number;
     rarity: string;
