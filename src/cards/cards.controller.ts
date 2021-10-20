@@ -28,4 +28,14 @@ export class CardsController {
     async findUserCards(@Param('id') id): Promise<Card[]> {
         return await this.cardsService.getUserCards(id);
     }
+
+    @Get('card/probability')
+    async getCardByProbability(){
+        return await this.cardsService.getCardByProbability();
+    }
+
+    @Patch('user/delete/cards/:id')
+    async deleteCardFromUser(@Param('id') id: string, @Body() cardDto: CardDto) {
+        await this.cardsService.deleteUserIdFromCard(id, cardDto);
+    }
 }
