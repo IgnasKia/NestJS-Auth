@@ -58,7 +58,7 @@ export class CardsService {
 
 
     async updateCard(id: string, cardDto: CardDto){
-      const cardOwner = this.cardModel.findByIdAndUpdate( id, { $pull: { userid: cardDto.userid } });
+      const cardOwner = this.cardModel.findByIdAndUpdate( id, { $push: { userid: cardDto.userid } });
       
       try {
         (await cardOwner).save();
@@ -74,12 +74,8 @@ export class CardsService {
       }
     }
 
-    async getUserCards(id: string) {
-      const userCards = this.cardModel.where( {userid: id} );
-      return userCards;
-    }
-
     async getCardByProbability(){
+
       let randomNumber = Math.floor(Math.random() * (100 - 1) + 1);
       if(randomNumber>=1 && randomNumber<=65) {
         // In this case to get common card chance is - 65%
@@ -106,6 +102,39 @@ export class CardsService {
       let random = Math.floor(Math.random() * await howManyrecords);
       const card = this.cardModel.findOne( {rarity: rarityName} ).skip(random).exec();
       return card;
+    }
+
+    async getUserCards(id: string) {
+      const howManyrecords = this.cardModel.aggregate([
+        { 
+            $match: { 
+                userid: id 
+                }
+            
+        },
+        {
+            "$project": {
+                "name":"$name",
+                "userid":"$userid",
+                "picture": "$picture",
+                "price": "$price",
+                "rarity":"$rarity",
+                "howMany": {
+                    "$size": {
+                        "$filter": {
+                            "input": "$userid",
+                            "as": "userid",
+                            "cond": {
+                                "$eq": ["$$userid", id]
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]);
+
+    return howManyrecords;
     }
     
 }
