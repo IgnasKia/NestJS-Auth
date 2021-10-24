@@ -8,7 +8,7 @@ import { CardsModule } from './cards/cards.module';
 import moment from 'moment';
 
 @Module({
-  imports: [ConfigModule.forRoot(), AuthModule, MongooseModule.forRoot(process.env.DATABASE), CardsModule],
+  imports: [ConfigModule.forRoot(), AuthModule, MongooseModule.forRoot(process.env.DATABASE_ATLAS), CardsModule],
   controllers: [AppController],
   providers: [AppService],
 })
