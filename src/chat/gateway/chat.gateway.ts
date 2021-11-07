@@ -15,8 +15,18 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
  @SubscribeMessage('sendMessage')
- handleMessage( socket: Socket, message: { sender: string, message: string}) {
-   this.server.emit('newMessage', message);
+ handleMessage( socket: Socket, message: { sender: string, room: string, message: string}) {
+   this.server.to(message.room).emit('newMessage', message);
+ }
+
+ @SubscribeMessage('joinRoom')
+ handleJoinRoom( socket: Socket, room: string, user: string) {
+   socket.join(room);
+ }
+
+ @SubscribeMessage('leaveRoom')
+ handleLeaveRoom( socket: Socket, room: string, user: string) {
+   socket.leave(room);
  }
 
   
