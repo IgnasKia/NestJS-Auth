@@ -4,6 +4,8 @@ import { CardsService } from './cards.service';
 import { CardDto } from './dto/card.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { AdminGuard } from '../auth/admin.guard';
+import { TradeDto } from './dto/trade.dto';
+import { CardTemp } from './cardTemp.schema';
 
 @Controller()
 export class CardsController {
@@ -17,6 +19,11 @@ export class CardsController {
     @Get('cards')
     async findAll(): Promise<Card[]> {
         return this.cardsService.findAll();
+    }
+
+    @Get('cards/:id')
+    async findCard(@Param('id') id: string){
+        return await this.cardsService.findCardbyId(id);
     }
 
     @Patch('cards/update/:id')
@@ -37,6 +44,28 @@ export class CardsController {
     @Patch('user/delete/cards/:id')
     async deleteCardFromUser(@Param('id') id: string, @Body() cardDto: CardDto) {
         await this.cardsService.deleteUserIdFromCard(id, cardDto);
+    }
+
+    // TRADING CARDS 
+
+    @Post('cards/trade/create')
+    async createTempTrade(@Body() tradeDto: TradeDto) {
+        await this.cardsService.createTempTrade(tradeDto);
+    }
+
+    @Patch('cards/trade/:id/:status')
+    async updateTradeStatus(@Param('id') id: string, @Param('status') status: string) {
+        return await this.cardsService.tradeStatus(id, status);
+    }
+
+    @Patch('user/trade/cards')
+    async usersTradingCards(@Body() tradeDto: TradeDto) {
+        await this.cardsService.tradeCards(tradeDto);
+    }
+
+    @Get('cards/trade/:traderOne/:traderTwo')
+    async findTradeIdByTraders(@Param('traderOne') traderOne: string, @Param('traderTwo') traderTwo: string) {
+       return await this.cardsService.findTradeId(traderOne, traderTwo);
     }
 
 }

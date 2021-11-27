@@ -11,7 +11,8 @@ import { ExtractJwt } from "passport-jwt";
 
 @Injectable()
 export class UsersRepository {
-    constructor(@InjectModel(User.name) public userModel: Model<UserDocument>, private jwtService: JwtService) {}
+
+    constructor(@InjectModel(User.name) public userModel: Model<UserDocument>) {}
 
     async createUser(authCredentialsDto: AuthCredentialsDto){
        
@@ -25,7 +26,7 @@ export class UsersRepository {
         } catch (error) {
           // Duplicate error
           console.log(error);
-          if (error.name === 'MongoError' && error.code === 11000) {
+          if (error.code === '11000') {
             throw new ConflictException('Username already exists');
           } 
           else {
@@ -57,7 +58,7 @@ export class UsersRepository {
      } catch (error) {
        // Duplicate error
        console.log(error);
-       if (error.name === 'MongoError' && error.code === 11000) {
+       if (error.name === 'MongoError' && error.code === '11000') {
          throw new ConflictException('Username already exists');
        } 
        else {

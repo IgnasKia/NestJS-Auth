@@ -3,19 +3,54 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { StringifyOptions } from 'querystring';
 import { Card, CardDocument } from './card.schema';
+import { CardTemp, CardTempDocument } from './cardTemp.schema';
 import { CardDto } from './dto/card.dto';
-
+import { TradeDto } from './dto/trade.dto';
 
 @Injectable()
 export class CardsService {
 
-    constructor(@InjectModel(Card.name) private cardModel: Model<CardDocument>) {}
+    constructor(@InjectModel(Card.name) private cardModel: Model<CardDocument>, @InjectModel(CardTemp.name) private cardTempModel: Model<CardTempDocument>) {}
 
     async create(cardDto: CardDto): Promise<Card> {
       const createdCard = new this.cardModel(cardDto);
       return createdCard.save();
     }
     
+    async createTempTrade(tradeDto: TradeDto): Promise<CardTemp> {
+      const createdTempTrade = new this.cardTempModel(tradeDto);
+      return createdTempTrade.save();
+    }
+
+    async tradeStatus(id: string, status: string) {
+      if (status == "accepted"){
+        const trade = await this.cardTempModel.findById(id);
+        this.tradeCards(trade);
+        console.log(trade.traderOne);
+        return await trade.traderOne;
+      } else if (status == "declined") {
+        console.log("trade declined")
+      }
+    }
+
+    async findTradeId(traderOne: string, traderTwo: string) {
+      const trade = await this.cardTempModel.findOne({ traderOne: traderOne, traderTwo: traderTwo });
+      return trade;
+    }
+
+    async findCardbyId(id: string) {
+      const card = this.cardModel.findById(id).exec();
+      return card;
+    }
+
+    async tradeCards(tradeDto: TradeDto) {
+
+      await this.deleteUserIdFromCardAfterTrade(tradeDto);
+
+      await this.newOwnerAfterTrade(tradeDto);
+
+    }
+
     async findAll(): Promise<Card[]> {
       return this.cardModel.find().exec();
     }
@@ -56,12 +91,88 @@ export class CardsService {
       }
     }
 
+    async deleteUserIdFromCardAfterTrade(tradeDto: TradeDto){
+      const cardOwner1 = await this.cardModel.findByIdAndUpdate(
+        { _id: tradeDto.traderOneCardId },
+        [
+          {
+            $set: {
+              userid: {
+                $let: {
+                  vars: { ix: { $indexOfArray: ["$userid", tradeDto.traderOne] } },
+                  in: {
+                    $concatArrays: [
+                      { $slice: ["$userid", 0, "$$ix"] },
+                      [],
+                      { $slice: ["$userid", { $add: [1, "$$ix"] }, { $size: "$userid" }] }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        ])
+
+        const cardOwner2 = await this.cardModel.findByIdAndUpdate(
+          { _id: tradeDto.traderTwoCardId },
+          [
+            {
+              $set: {
+                userid: {
+                  $let: {
+                    vars: { ix: { $indexOfArray: ["$userid", tradeDto.traderTwo] } },
+                    in: {
+                      $concatArrays: [
+                        { $slice: ["$userid", 0, "$$ix"] },
+                        [],
+                        { $slice: ["$userid", { $add: [1, "$$ix"] }, { $size: "$userid" }] }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          ])
+      
+      try {
+        cardOwner1.save();
+        cardOwner2.save();
+      } catch (error) {
+        // Duplicate error
+        console.log(error);
+        if (error.name === 'MongoError' && error.code === 11000) {
+          throw new ConflictException('Username already exists');
+        } 
+        else {
+          throw new InternalServerErrorException(error);
+        }
+      }
+    }
+
 
     async updateCard(id: string, cardDto: CardDto){
       const cardOwner = this.cardModel.findByIdAndUpdate( id, { $push: { userid: cardDto.userid } });
       
       try {
         (await cardOwner).save();
+      } catch (error) {
+        // Duplicate error
+        console.log(error);
+        if (error.name === 'MongoError' && error.code === 11000) {
+          throw new ConflictException('Username already exists');
+        } 
+        else {
+          throw new InternalServerErrorException(error);
+        }
+      }
+    }
+
+    async newOwnerAfterTrade(tradeDto: TradeDto){
+      const cardOwner1 = this.cardModel.findByIdAndUpdate( tradeDto.traderOneCardId, { $push: { userid: tradeDto.traderTwo } });
+      const cardOwner2 = this.cardModel.findByIdAndUpdate( tradeDto.traderTwoCardId, { $push: { userid: tradeDto.traderOne } });
+      try {
+        (await cardOwner1).save();
+        (await cardOwner2).save();
       } catch (error) {
         // Duplicate error
         console.log(error);
