@@ -55,12 +55,7 @@ export class CardsController {
 
     @Patch('cards/trade/:id/:status')
     async updateTradeStatus(@Param('id') id: string, @Param('status') status: string) {
-        return await this.cardsService.tradeStatus(id, status);
-    }
-
-    @Patch('user/trade/cards')
-    async usersTradingCards(@Body() tradeDto: TradeDto) {
-        await this.cardsService.tradeCards(tradeDto);
+        await this.cardsService.tradeStatus(id, status);
     }
 
     @Get('cards/trades/created/:traderOne')
