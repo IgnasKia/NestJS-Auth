@@ -63,9 +63,15 @@ export class CardsController {
         await this.cardsService.tradeCards(tradeDto);
     }
 
-    @Get('cards/trade/:traderOne/:traderTwo')
-    async findTradeIdByTraders(@Param('traderOne') traderOne: string, @Param('traderTwo') traderTwo: string) {
-       return await this.cardsService.findTradeId(traderOne, traderTwo);
+    @Get('cards/trades/created/:traderOne')
+    async findUserTrades(@Param('traderOne') traderOne: string) {
+       return await this.cardsService.getUserTrades(traderOne);
+    }
+
+
+    @Get('cards/trades/requested/:traderTwo')
+    async findRequestedTrades(@Param('traderTwo') traderTwo: string) {
+       return await this.cardsService.getRequestedTrades(traderTwo);
     }
 
 }

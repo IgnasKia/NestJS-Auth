@@ -38,6 +38,16 @@ export class CardsService {
       return trade;
     }
 
+    async getRequestedTrades(traderTwo: string) {
+      const requestedTrades = await this.cardTempModel.find({ traderTwo: traderTwo });
+      return requestedTrades;
+    }
+
+    async getUserTrades(traderOne: string) {
+      const trades = await this.cardTempModel.find({ traderOne: traderOne });
+      return trades;
+    }
+
     async findCardbyId(id: string) {
       const card = this.cardModel.findById(id).exec();
       return card;
