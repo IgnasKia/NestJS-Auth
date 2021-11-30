@@ -39,12 +39,12 @@ export class CardsService {
     }
 
     async getRequestedTrades(traderTwo: string) {
-      const requestedTrades = await this.cardTempModel.find({ traderTwo: traderTwo });
+      const requestedTrades = await this.cardTempModel.find({ traderTwo: traderTwo }).exec();
       return requestedTrades;
     }
 
     async getUserTrades(traderOne: string) {
-      const trades = await this.cardTempModel.find({ traderOne: traderOne });
+      const trades = await this.cardTempModel.find({ traderOne: traderOne }).exec();
       return trades;
     }
 
