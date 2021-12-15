@@ -1,7 +1,6 @@
 import { ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { StringifyOptions } from 'querystring';
 import { Card, CardDocument } from './card.schema';
 import { CardTemp, CardTempDocument } from './cardTemp.schema';
 import { CardDto } from './dto/card.dto';
@@ -59,8 +58,6 @@ export class CardsService {
       await this.cardTempModel.findByIdAndDelete(tradeDto._id);
 
     }
-
-
 
     async findAll(): Promise<Card[]> {
       return this.cardModel.find().exec();
