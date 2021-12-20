@@ -52,7 +52,7 @@ export class CoinsService {
       return await this.coinsModel.updateOne({ _id: id }, {
         $pull: {
             userid: coinsDto.userid
-        },
+        }
       });
     }
 
@@ -60,7 +60,7 @@ export class CoinsService {
     
     const result = this.coinsModel.exists({_id:id, userid: coinsDto.userid});
     if(await result){
-      return "Error: You already added this coin to your collecion"
+      return result
       }else {
         return await this.coinsModel.updateOne({ _id: id }, {
           $push: {
@@ -90,7 +90,9 @@ export class CoinsService {
         return coin;
       }
 
-      
+      async getRandomCoins(){
+        return this.coinsModel.aggregate([{ $sample: { size: 3 } }]);
+      }
 
         
 }

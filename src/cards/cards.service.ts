@@ -254,6 +254,11 @@ export class CardsService {
         {
             "$project": {
                 "name":"$name",
+                "issuer":'$issuer',
+                "year":'$year',
+                "value":'$value',
+                "currency":'$currency',
+                "comment":'$comment',
                 "userid":"$userid",
                 "picture": "$picture",
                 "price": "$price",

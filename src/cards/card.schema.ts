@@ -42,6 +42,21 @@ export class Card {
   })
   rarity: string;
 
+  @Prop()
+  value: number;
+
+  @Prop()
+  issuer: string;
+
+  @Prop()
+  currency: string;
+
+  @Prop()
+  comment: string;
+
+  @Prop()
+  year: number;
+
 }
 
 export const CardSchema = SchemaFactory.createForClass(Card);

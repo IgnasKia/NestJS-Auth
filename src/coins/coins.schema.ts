@@ -13,13 +13,35 @@ export class Coins {
   picture: string;
 
   @Prop()
-  country: string;
+  issuer: string;
 
   @Prop()
   public_id: string;
 
   @Prop()
   userid: [string];
+
+  @Prop()
+  year: number;
+
+  @Prop()
+  value: number;
+
+  @Prop()
+  currency: string;
+
+  @Prop()
+  composition: string;
+
+  @Prop()
+  weight: number;
+  
+  @Prop()
+  shape: string;
+
+  @Prop()
+  comment: string;
+
 }
 
 export const CoinsSchema = SchemaFactory.createForClass(Coins);

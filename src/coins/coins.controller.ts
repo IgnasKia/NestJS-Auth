@@ -28,7 +28,7 @@ export class CoinsController {
     }
 
     @Patch('coins/user/delete/:coinId')
-    async deleteUserIdFromCoin(@Param('userid') coinId: string, @Body() coinsDto: CoinsDto) {
+    async deleteUserIdFromCoin(@Param('coinId') coinId: string, @Body() coinsDto: CoinsDto) {
         return await this.coinsService.deleteUserIdFromCoin(coinId, coinsDto);
     }
 
@@ -40,6 +40,11 @@ export class CoinsController {
     @Get('coins')
     async findAll(): Promise<Coins[]> {
         return await this.coinsService.getAllCoins();
+    }
+
+    @Get('coins/random')
+    async getRandomCoins(): Promise<Coins[]> {
+        return await this.coinsService.getRandomCoins();
     }
 
     @Get('coins/:id')

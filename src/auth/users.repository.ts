@@ -3,11 +3,7 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { AuthCredentialsDto } from "./dto/auth-credentials.dto";
 import * as bcrypt from "bcrypt";
-import { JwtService } from '@nestjs/jwt';
 import { User, UserDocument } from "./user.schema";
-import { find } from "rxjs";
-import { ExtractJwt } from "passport-jwt";
-
 
 @Injectable()
 export class UsersRepository {
