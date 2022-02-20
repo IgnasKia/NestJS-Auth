@@ -4,6 +4,6 @@ import { Injectable } from '@nestjs/common';
 export class AppService {
   const words = ["house", "hello", "world"];
   getHello(): string {
-    return JSON.parse(words);
+    return JSON.parse(this.words);
   }
 }
